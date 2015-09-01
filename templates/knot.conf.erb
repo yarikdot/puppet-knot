@@ -1,74 +1,57 @@
 # THIS CONFIGURATION IS MANAGED BY PUPPET
 # see man 5 knot.conf for all available configuration options
-system {
-  user <%= @service_user %>.<%= @service_group %>;
-<%- @system.each do |k,v| -%>
-  <%= k %> <%= v %>;
-<%- end -%>
-}
 
-<%- if @keys -%>
-keys {
-<%- @keys.each do |k,v| -%>
-  <%= k %> <%= v['algorithm'] %> "<%= v['key'] %>";
-<%- end -%>
-}
-<%- end -%>
+server:
+    user: <%= @service_user %>:<%= @service_group %>
+    <%- @system.each do |k,v| -%>
+    <%= k %>: <%= v %>
+    <%- end -%>
+    <%- @interfaces.each do |k,v| -%>
+    listen: <%= v['address'] %>@<%= v['port'] %>
+    <%- end -%>
 
-interfaces {
-<%- @interfaces.each do |k,v| -%>
-  <%= k -%> {
-  <%- v.each do |y,z| -%>
-    <%= y %> <%= z %>;
-  <%- end -%>
-  }
-<%- end -%>
-}
-
-<%- if @remotes -%>
-remotes {
-<%- @remotes.each do |k,v| -%>
-  <%= k -%> {
-  <%- v.each do |y,z| -%>
-    <%= y %> <%= z %>;
-  <%- end -%>
-  }
-<%- end -%>
-}
-<%- end -%>
-
-<%- if @groups -%>
-groups {
-<%- @groups.each do |k,v| -%>
-  <%= k %> { <%= v %> }
-<%- end -%>
-}
-<%- end -%>
-
-control {
-<%- @control.each do |k,v| -%>
-  <%= k %> <%= v %>;
-<%- end -%>
-}
-
-zones {
-  storage "<%= @zone_storage %>";
-<%- if @dnssec_enable -%>
-  dnssec-enable on;
-  dnssec-keydir "<%= @dnssec_keydir %>";
-<%- end -%>
-<%- if @zone_options then @zone_options.each do |k,v| -%>
-  <%= k %> <%= v %>;
-<%- end end -%>
-  include "<%= @zones_config_file %>";
-}
-
-log {
+log:
 <%- @log.each do |k,v| -%>
-  <%= k -%> {
-  <%- v.each do |y,z| -%>
-    <%= y %> <%= z %>;
-  <%- end -%>
-  }
+    - target: <%= k -%>
+    <%- v.each do |y,z| -%>
+
+      <%= y %>: <%= z %>
+    <%- end -%>
 <%- end -%>
-}
+
+control:
+<%- @control.each do |k,v| -%>
+    <%= k %>: <%= v %>
+<%- end -%>
+
+#<%- if @keys -%>
+#keys {
+#<%- @keys.each do |k,v| -%>
+#  <%= k %> <%= v['algorithm'] %> "<%= v['key'] %>";
+#<%- end -%>
+#}
+#<%- end -%>
+#
+
+#<%- if @remotes -%>
+#remotes {
+#<%- @remotes.each do |k,v| -%>
+#  <%= k -%> {
+#  <%- v.each do |y,z| -%>
+#    <%= y %> <%= z %>;
+#  <%- end -%>
+#  }
+#<%- end -%>
+#}
+#<%- end -%>
+#
+#<%- if @groups -%>
+#groups {
+#<%- @groups.each do |k,v| -%>
+#  <%= k %> { <%= v %> }
+#<%- end -%>
+#}
+#<%- end -%>
+#
+
+include: "<%= @zones_config_file %>"

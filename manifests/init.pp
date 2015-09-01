@@ -81,6 +81,7 @@
 #   Log statement hash. See https://www.knot-dns.cz/documentation/html/reference.html#log-statement
 #
 # [*interfaces*]
+#   This setting is here to keep the backwards compatibility. Since version 2.0 this has been part of system variable.
 #   Default:
 #     $interfaces = {
 #       all_ipv4  => {

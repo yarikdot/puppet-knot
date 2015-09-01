@@ -79,12 +79,12 @@ class knot::params {
       'port'    => 53,
     },
     'all_ipv6'  => {
-      'address' => '[::]',
+      'address' => '::',
       'port'    => 53,
     }
   }
   $control = {
-    'listen-on' => 'knot.sock'
+    'listen' => 'knot.sock'
   }
   $zone_storage = '/var/lib/knot'
   $dnssec_keydir = '/etc/knot/dnssec_keys.d'
